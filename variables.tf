@@ -8,33 +8,36 @@ variable "region" {
   type        = string
 }
 
-variable "environment" {
-  description = "AWS environment"
-  type        = string
-}
+variable "availability_zone" {}
 
 
-# Network
+# VPC
 
-variable "vpc_cidr" {
-  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overriden"
-  type        = string
-}
+variable "vpc_cidr_block" {}
 
-variable "subnet_cidr" {
-  description = "List of CIDR Blocks for each Public Subnet"
-  type        = map(list(string))
-}
+# Subnet
+
+variable "subnet_cidr_blocks" {}
 
 
 # RDS
 
-variable "rds_config" {}
+variable "rds_identifier" {}
 
-variable "sg_rds_cidr" {}
+variable "rds_engine" {}
 
-variable "sg_rds_source" {}
+variable "rds_engine_version" {}
 
-variable "rds_master_username" {}
+variable "rds_instance_class" {}
 
-variable "rds_master_password" {}
+variable "rds_username" {}
+
+variable "rds_password" {}
+
+# EC2
+
+variable "ec2_ami" {}
+
+variable "ec2_instance_type" {}
+
+variable "tags" {}
