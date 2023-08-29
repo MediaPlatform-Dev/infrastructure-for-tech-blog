@@ -20,6 +20,9 @@ variable "vpc_cidr_block" {}
 variable "subnet_cidr_blocks" {}
 
 
+# Security Group
+variable "security_groups" {}
+
 # RDS
 
 variable "rds_identifier" {}

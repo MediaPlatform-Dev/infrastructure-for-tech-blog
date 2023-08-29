@@ -11,6 +11,15 @@ module "vpc" {
   tags = var.tags
 }
 
+module "security_group" {
+  source = "./modules/security_group"
+  
+  vpc_id = module.vpc.id
+  security_groups = toset(var.security_groups)
+
+  tags = var.tags
+}
+
 module "elastic_ip" {
   source = "./modules/elastic_ip"
 

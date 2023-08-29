@@ -12,6 +12,18 @@ subnet_cidr_blocks  = {
   private = ["10.0.128.0/24"]
 }
 
+# Security Group
+security_groups = {
+  "ec2" = {
+    "ingress" = 
+    "egress" = 
+  }
+  "rds" = {
+    "ingress" = 
+    "egress" = 
+  }
+}
+
 # RDS
 rds_identifier = "wordpress"
 rds_engine = "mariadb"
