@@ -29,7 +29,7 @@ module "nat_gateway" {
   source = "./modules/nat_gateway"
 
   allocation_id = module.elastic_ip.id
-  subnet_id = module.subnet.ids[1]
+  subnet_id = module.subnet.ids[0] // public subnet
 
   tags = var.tags
 }
