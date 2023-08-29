@@ -1,6 +1,6 @@
 # General
 region = "ap-northeast-2"
-availability_zone = "az2a"
+availability_zone = "a"
 
 
 # VPC
@@ -21,7 +21,6 @@ rds_username = "root"
 rds_password = "rootroot"
 
 # EC2
-ec2_name = "WordPress"
 ec2_ami = "ami-04a7c24c015ef1e4c"
 ec2_instance_type = "t3.micro"
 

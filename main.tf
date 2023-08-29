@@ -1,5 +1,4 @@
 locals {
-  availability_zones = [ for a in data.aws_availability_zones.available.names: a if try(regex("^[a-z]{2}-[a-z]+-[0-9][a-z]$", a), false) != false ]
   public_subnets  = flatten([ for k, v in var.subnet_cidr_blocks : [ for c in v : join("-", [k, c]) ] if k == "public" ])
   private_subnets = flatten([ for k, v in var.subnet_cidr_blocks : [ for c in v : join("-", [k, c]) ] if k == "private" ])
 }
@@ -51,7 +50,7 @@ module "subnet" {
 
   vpc_id             = module.vpc.id
   subnet_cidr_blocks = concat(local.public_subnets, local.private_subnets)
-  availability_zone  = var.availability_zone
+  availability_zone  = join("", [var.region, var.availability_zone])
   route_table_ids    = module.route_table.ids
 
   tags = var.tags
@@ -62,7 +61,7 @@ module "rds" {
 
   identifier     = var.rds_identifier
 
-  availability_zone  = var.availability_zone
+  availability_zone  = join("", [var.region, var.availability_zone])
 
   engine         = var.rds_engine
   engine_version = var.rds_engine_version
@@ -78,7 +77,7 @@ module "rds" {
 module "ec2" {
   source        = "./modules/ec2"
 
-  availability_zone  = var.availability_zone
+  availability_zone  = join("", [var.region, var.availability_zone])
 
   ami           = var.ec2_ami
   instance_type = var.ec2_instance_type
