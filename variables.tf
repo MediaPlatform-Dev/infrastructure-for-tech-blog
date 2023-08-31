@@ -8,12 +8,11 @@ variable "region" {
   type        = string
 }
 
-variable "availability_zone" {}
-
 
 # VPC
 
 variable "vpc_cidr_block" {}
+
 
 # Subnet
 
@@ -21,11 +20,12 @@ variable "subnet_cidr_blocks" {}
 
 
 # Security Group
-variable "security_groups" {}
+
+variable "security_group_rules" {}
+
 
 # RDS
 
-variable "rds_identifier" {}
 
 variable "rds_engine" {}
 
@@ -36,6 +36,7 @@ variable "rds_instance_class" {}
 variable "rds_username" {}
 
 variable "rds_password" {}
+
 
 # EC2
 

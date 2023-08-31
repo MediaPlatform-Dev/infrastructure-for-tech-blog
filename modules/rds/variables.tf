@@ -21,6 +21,8 @@ variable "instance_class" {
 	default			= "db.t2.micro"
 }
 
+variable "vpc_security_group_ids" {}
+
 variable "allocated_storage" {
 	description = "The RDS Instance class"
   type        = number
@@ -66,5 +68,7 @@ variable "deletion_protection" {
   type        = bool
 	default     = false
 }
+
+variable "subnet_ids" {}
 
 variable "tags" {}

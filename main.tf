@@ -1,6 +1,13 @@
 locals {
+  availability_zones = [ for a in data.aws_availability_zones.available.names: a if try(regex("^[a-z]{2}-[a-z]+-[0-9][a-z]$", a), false) != false ]
   public_subnets  = flatten([ for k, v in var.subnet_cidr_blocks : [ for c in v : join("-", [k, c]) ] if k == "public" ])
   private_subnets = flatten([ for k, v in var.subnet_cidr_blocks : [ for c in v : join("-", [k, c]) ] if k == "private" ])
+  tags = merge(
+    {
+      Created = "${timestamp()}"
+    },
+    var.tags
+  )
 }
 
 module "vpc" {
@@ -8,22 +15,7 @@ module "vpc" {
 
   cidr_block = var.vpc_cidr_block
 
-  tags = var.tags
-}
-
-module "security_group" {
-  source = "./modules/security_group"
-  
-  vpc_id = module.vpc.id
-  security_groups = toset(var.security_groups)
-
-  tags = var.tags
-}
-
-module "elastic_ip" {
-  source = "./modules/elastic_ip"
-
-  tags = var.tags
+  tags = local.tags
 }
 
 module "internet_gateway" {
@@ -31,67 +23,96 @@ module "internet_gateway" {
 
   vpc_id = module.vpc.id
 
-  tags = var.tags
+  tags = local.tags
 }
 
-module "nat_gateway" {
-  source = "./modules/nat_gateway"
+module "security_group" {
+  source = "./modules/security_group"
+  
+  vpc_id = module.vpc.id
 
-  allocation_id = module.elastic_ip.id
-  subnet_id = module.subnet.ids[0] // public subnet
+  for_each = toset(keys(var.security_group_rules))
 
-  tags = var.tags
-}
+  resource_name = each.value
+  security_group_rules = var.security_group_rules[each.value]
 
-module "route_table" {
-  source              = "./modules/route_table"
-
-  vpc_id              = module.vpc.id
-  route_tables        = toset([for k, v in var.subnet_cidr_blocks : k])
-  internet_gateway_id = module.internet_gateway.id
-  nat_gateway_id      = module.nat_gateway.id
-
-  tags = var.tags
+  tags = local.tags
 }
 
 module "subnet" {
   source             = "./modules/subnet"
 
   vpc_id             = module.vpc.id
-  subnet_cidr_blocks = concat(local.public_subnets, local.private_subnets)
-  availability_zone  = join("", [var.region, var.availability_zone])
-  route_table_ids    = module.route_table.ids
 
-  tags = var.tags
+  for_each = toset(keys(var.subnet_cidr_blocks))
+
+  visibility = each.value
+  subnet_cidr_blocks = var.subnet_cidr_blocks[each.value]
+  availability_zone  = local.availability_zones
+  route_table_ids    = module.route_table[each.value].ids
+
+  tags = local.tags
 }
 
-module "rds" {
-  source         = "./modules/rds"
+module "elastic_ip" {
+  source = "./modules/elastic_ip"
 
-  identifier     = var.rds_identifier
+  tags = local.tags
+}
 
-  availability_zone  = join("", [var.region, var.availability_zone])
+module "nat_gateway" {
+  source = "./modules/nat_gateway"
 
-  engine         = var.rds_engine
-  engine_version = var.rds_engine_version
+  allocation_id = module.elastic_ip.id
+  subnet_id = module.subnet["public"].ids[0]
 
-  instance_class = var.rds_instance_class
+  tags = local.tags
+}
 
-  username       = var.rds_username
-  password       = var.rds_password
+module "route_table" {
+  source              = "./modules/route_table"
 
-  tags = var.tags
+  vpc_id              = module.vpc.id
+  internet_gateway_id = module.internet_gateway.id
+  nat_gateway_id      = module.nat_gateway.id
+
+  for_each = toset(keys(var.subnet_cidr_blocks))
+  visibility = each.value
+  subnet_cidr_blocks = var.subnet_cidr_blocks[each.value]
+
+  tags = local.tags
 }
 
 module "ec2" {
   source        = "./modules/ec2"
 
-  availability_zone  = join("", [var.region, var.availability_zone])
+  availability_zone  = local.availability_zones[0]
 
   ami           = var.ec2_ami
   instance_type = var.ec2_instance_type
 
-  subnet_id     = module.subnet.ids[0]
+  subnet_id     = module.subnet["public"].ids[3]
+  vpc_security_group_ids = [module.security_group["ec2"].id]
 
-  tags = var.tags
+  tags = local.tags
+}
+
+module "rds" {
+  source         = "./modules/rds"
+
+  identifier     = local.tags.Project
+
+  availability_zone  = local.availability_zones[0]
+
+  engine         = var.rds_engine
+  engine_version = var.rds_engine_version
+
+  instance_class = var.rds_instance_class
+  subnet_ids     = module.subnet["private"].ids
+  vpc_security_group_ids = [module.security_group["rds"].id]
+
+  username       = var.rds_username
+  password       = var.rds_password
+
+  tags = local.tags
 }

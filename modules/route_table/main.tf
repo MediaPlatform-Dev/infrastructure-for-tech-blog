@@ -1,11 +1,11 @@
 resource "aws_route_table" "this" {
   vpc_id   = var.vpc_id
   
-  for_each = var.route_tables
+  count = length(var.subnet_cidr_blocks)
 
   tags = merge(
     {
-      Name = "rtb-${var.tags.Project}-${each.value}"
+      Name = "rtb-${var.tags.Project}-${var.visibility}-${count.index}"
       Type = "rtb"
     },
     var.tags
@@ -13,10 +13,10 @@ resource "aws_route_table" "this" {
 }
 
 resource "aws_route" "this" {
-  for_each               = var.route_tables
+  count                  = length(var.subnet_cidr_blocks)
 
-  route_table_id         = aws_route_table.this[each.value].id
+  route_table_id         = aws_route_table.this[count.index].id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = each.value == "public" ? var.internet_gateway_id : null
-  nat_gateway_id         = each.value == "public" ? null : var.nat_gateway_id
+  gateway_id             = var.visibility == "public" ? var.internet_gateway_id : null
+  nat_gateway_id         = var.visibility == "public" ? null : var.nat_gateway_id
 }

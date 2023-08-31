@@ -6,4 +6,6 @@ variable "availability_zone" {}
 
 variable "route_table_ids" {}
 
+variable "visibility" {}
+
 variable "tags" {}

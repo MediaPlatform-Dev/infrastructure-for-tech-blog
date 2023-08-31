@@ -1,5 +1,7 @@
 variable "vpc_id" {}
 
-variable "security_groups" {}
+variable "resource_name" {} 
+
+variable "security_group_rules" {}
 
 variable "tags" {}
