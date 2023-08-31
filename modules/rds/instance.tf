@@ -1,5 +1,8 @@
-resource "aws_db_instance" "this" {
+resource "aws_db_subnet_group" "this" {
+  subnet_ids = var.subnet_ids
+}
 
+resource "aws_db_instance" "this" {
   identifier              = var.identifier
 
   availability_zone       = var.availability_zone
@@ -8,6 +11,7 @@ resource "aws_db_instance" "this" {
   engine_version          = var.engine_version
 
   instance_class          = var.instance_class
+  db_subnet_group_name = aws_db_subnet_group.this.name
   vpc_security_group_ids  = var.vpc_security_group_ids
   allocated_storage       = var.allocated_storage
 
@@ -19,8 +23,6 @@ resource "aws_db_instance" "this" {
   skip_final_snapshot     = var.skip_final_snapshot
   apply_immediately       = var.apply_immediately
   deletion_protection     = var.deletion_protection
-
-  db_subnet_group_name = aws_db_subnet_group.this.name
   
   tags = merge(
     {
@@ -29,8 +31,4 @@ resource "aws_db_instance" "this" {
     },
     var.tags
   )
-}
-
-resource "aws_db_subnet_group" "this" {
-  subnet_ids = var.subnet_ids
 }

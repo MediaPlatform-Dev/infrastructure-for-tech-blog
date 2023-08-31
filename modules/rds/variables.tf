@@ -30,12 +30,12 @@ variable "allocated_storage" {
 }
 
 variable "username" {
-	description = "The RDS username"
+	description = "The RDS master username"
   type        = string
 }
 
 variable "password" {
-	description = "The RDS password"
+	description = "The RDS master password"
   type        = string
 }
 

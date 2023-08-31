@@ -11,10 +11,9 @@ resource "aws_security_group" "this" {
 }
 
 resource "aws_security_group_rule" "this" {
+  count = length(var.security_group_rules)
 
   security_group_id = aws_security_group.this.id
-
-  count = length(var.security_group_rules)
 
   type = var.security_group_rules[count.index]["type"]
   from_port = var.security_group_rules[count.index]["from_port"]

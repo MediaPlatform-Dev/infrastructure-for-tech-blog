@@ -49,7 +49,6 @@ module "subnet" {
   visibility = each.value
   subnet_cidr_blocks = var.subnet_cidr_blocks[each.value]
   availability_zone  = local.availability_zones
-  route_table_ids    = module.route_table[each.value].ids
 
   tags = local.tags
 }
@@ -79,6 +78,7 @@ module "route_table" {
   for_each = toset(keys(var.subnet_cidr_blocks))
   visibility = each.value
   subnet_cidr_blocks = var.subnet_cidr_blocks[each.value]
+  subnet_ids = module.subnet[each.value].ids
 
   tags = local.tags
 }
