@@ -15,24 +15,31 @@ security_group_rules = {
   ec2 = [
     {
       type = "ingress"
+      from_port = 22
+      to_port = 22
+      protocol = "TCP"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      type = "ingress"
       from_port = 80
       to_port = 80
       protocol = "TCP"
-      cidr_blocks = "0.0.0.0/0"
+      cidr_blocks = ["0.0.0.0/0"]
     },
     {
       type = "ingress"
       from_port = 443
       to_port = 443
       protocol = "TCP"
-      cidr_blocks = "0.0.0.0/0"
+      cidr_blocks = ["0.0.0.0/0"]
     },
     {
       type = "egress"
       from_port = 0
       to_port = 0
       protocol = "-1"
-      cidr_blocks = "0.0.0.0/0"
+      cidr_blocks = ["0.0.0.0/0"]
     }
   ]
   rds = [
@@ -41,15 +48,15 @@ security_group_rules = {
       from_port = 3306
       to_port = 3306
       protocol = "TCP"
-      cidr_blocks = "10.0.0.0/24"
+      cidr_blocks = ["10.0.0.0/24"]
+    },
+    {
+      type = "egress"
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
     }
-    #{
-    #  type = "egress"
-    #  from_port = 0
-    #  to_port = 0
-    #  protocol = "-1"
-    #  cidr_blocks = "0.0.0.0/0"
-    #}
   ]
 }
 
@@ -75,6 +82,7 @@ subnet_cidr_blocks  = {
 rds_engine = "mariadb"
 rds_engine_version = "10.6"
 rds_instance_class = "db.t3.micro"
+rds_db_name = "wordpress"
 rds_username = "root"
 rds_password = "rootroot"
 

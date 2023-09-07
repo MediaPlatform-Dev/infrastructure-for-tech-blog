@@ -33,6 +33,8 @@ variable "rds_engine_version" {}
 
 variable "rds_instance_class" {}
 
+variable "rds_db_name" {}
+
 variable "rds_username" {}
 
 variable "rds_password" {}

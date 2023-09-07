@@ -111,6 +111,7 @@ module "rds" {
   subnet_ids     = module.subnet["private"].ids
   vpc_security_group_ids = [module.security_group["rds"].id]
 
+  db_name         = var.rds_db_name
   username       = var.rds_username
   password       = var.rds_password
 

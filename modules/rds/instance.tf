@@ -15,6 +15,7 @@ resource "aws_db_instance" "this" {
   vpc_security_group_ids  = var.vpc_security_group_ids
   allocated_storage       = var.allocated_storage
 
+  db_name                 = var.db_name
   username                = var.username
   password                = var.password
 

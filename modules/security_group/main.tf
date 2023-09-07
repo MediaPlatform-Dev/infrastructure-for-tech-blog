@@ -19,5 +19,5 @@ resource "aws_security_group_rule" "this" {
   from_port = var.security_group_rules[count.index]["from_port"]
   to_port = var.security_group_rules[count.index]["to_port"]
   protocol = var.security_group_rules[count.index]["protocol"]
-  cidr_blocks = [var.security_group_rules[count.index]["cidr_blocks"]]
+  cidr_blocks = var.security_group_rules[count.index]["cidr_blocks"]
 }

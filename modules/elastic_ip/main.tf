@@ -1,5 +1,5 @@
 resource "aws_eip" "this" {
-  vpc = var.vpc
+  vpc = true
   
   tags = merge(
     {
