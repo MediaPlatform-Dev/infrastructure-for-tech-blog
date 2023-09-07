@@ -48,7 +48,7 @@ security_group_rules = {
       from_port = 3306
       to_port = 3306
       protocol = "TCP"
-      cidr_blocks = ["10.0.0.0/24"]
+      cidr_blocks = ["0.0.0.0/0"]
     },
     {
       type = "egress"
@@ -90,3 +90,4 @@ rds_password = "rootroot"
 # EC2
 ec2_ami = "ami-04a7c24c015ef1e4c"
 ec2_instance_type = "t3.micro"
+ec2_key_name = "k1m743hyun"

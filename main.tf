@@ -94,6 +94,8 @@ module "ec2" {
   subnet_id     = module.subnet["public"].ids[3]
   vpc_security_group_ids = [module.security_group["ec2"].id]
 
+  key_name = var.ec2_key_name
+
   tags = local.tags
 }
 
