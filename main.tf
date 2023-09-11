@@ -119,3 +119,33 @@ module "rds" {
 
   tags = local.tags
 }
+
+resource "null_resource" "wordpress" {
+  # Connection Block for Provisioners to connect to EC2 Instance
+  connection {
+    type        = "ssh"
+    host        = module.ec2.public_ip
+    user        = "ec2-user"
+    password    = ""
+    private_key = file("${var.ec2_key_name}.pem")
+  }
+
+  ## File Provisioner: Copies the terraform-key.pem file to /tmp/terraform-key.pem
+  provisioner "file" {
+    source      = "${var.ec2_key_name}.pem"
+    destination = "/tmp/terraform-key.pem"
+  }
+
+  ## Remote Exec Provisioner: Using remote-exec provisioner fix the private key permissions on Bastion Host
+  ## Install docker, start and enable the service, pull wordpress image and create the container
+  provisioner "remote-exec" {
+    inline = [
+      "sudo chmod 400 /tmp/tf-deploy.pem",
+      "sudo yum update -y",
+      "sudo yum install docker -y",
+      "sudo systemctl restart docker && sudo systemctl enable docker",
+      "sudo docker pull wordpress",
+      "sudo docker run --name wordpress -p 80:80 -e WORDPRESS_DB_HOST=${module.rds.endpoint} -e WORDPRESS_DB_USER=${var.rds_username} -e WORDPRESS_DB_PASSWORD=${var.rds_password} -e WORDPRESS_DB_NAME=${var.rds_db_name} -d wordpress"
+    ]
+  }
+}

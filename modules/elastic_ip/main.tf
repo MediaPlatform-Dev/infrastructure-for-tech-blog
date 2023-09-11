@@ -1,9 +1,5 @@
 resource "aws_eip" "this" {
   vpc = true
-
-  lifecycle {
-    create_before_destroy = true
-  }
   
   tags = merge(
     {

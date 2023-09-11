@@ -6,6 +6,10 @@ resource "tls_private_key" "this" {
 resource "aws_key_pair" "this" {
   key_name = var.key_name
   public_key = tls_private_key.this.public_key_openssh
+  
+  depends_on = [
+    tls_private_key.this
+  ]
 }
 
 resource "local_file" "this" {

@@ -24,6 +24,7 @@ resource "aws_db_instance" "this" {
   skip_final_snapshot     = var.skip_final_snapshot
   apply_immediately       = var.apply_immediately
   deletion_protection     = var.deletion_protection
+  publicly_accessible     = false
   
   tags = merge(
     {
