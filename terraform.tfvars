@@ -5,6 +5,17 @@ tags = {
   Project = "tech-blog"
 }
 
+# dynamodb
+dynamodb_name = "terraform-state-lock"
+dynamodb_billing_mode = "PROVISIONED"
+dynamodb_read_capacity = 5
+dynamodb_write_capacity = 5
+dynamodb_hash_key = "LockID"
+
+
+# s3
+s3_bucket = "terraform-state"
+
 
 # VPC
 vpc_cidr_block     = "10.0.0.0/16"
@@ -90,4 +101,4 @@ rds_password = "rootroot"
 # EC2
 ec2_ami = "ami-04a7c24c015ef1e4c"
 ec2_instance_type = "t3.micro"
-ec2_key_name = "k1m743hyun"
+ec2_key_name = "mzd_TechBlog_dev"
