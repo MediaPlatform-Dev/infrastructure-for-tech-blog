@@ -6,10 +6,10 @@ terraform {
     }
   }
 
-  #backend s3 {
-  #  bucket = "tech-blog-terraform-state"
-  #  key = "terraform/terraform.tfstate"
-  #  region = "ap-northeast-2"
-  #  dynamodb_table = "terraform-state-lock"
-  #}
+  backend s3 {
+    bucket  = "tech-blog-terraform-state"
+    key     = "terraform/terraform.tfstate"
+    region  = "ap-northeast-2"
+    encrypt = true
+  }
 }

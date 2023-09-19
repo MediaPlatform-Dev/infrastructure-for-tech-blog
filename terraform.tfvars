@@ -5,17 +5,6 @@ tags = {
   Project = "tech-blog"
 }
 
-# dynamodb
-dynamodb_name = "terraform-state-lock"
-dynamodb_billing_mode = "PROVISIONED"
-dynamodb_read_capacity = 5
-dynamodb_write_capacity = 5
-dynamodb_hash_key = "LockID"
-
-
-# s3
-s3_bucket = "terraform-state"
-
 
 # VPC
 vpc_cidr_block     = "10.0.0.0/16"

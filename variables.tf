@@ -8,22 +8,7 @@ variable "region" {
   type        = string
 }
 
-# dynamodb
-
-variable "dynamodb_name" {}
-
-variable "dynamodb_billing_mode" {}
-
-variable "dynamodb_read_capacity" {}
-
-variable "dynamodb_write_capacity" {}
-
-variable "dynamodb_hash_key" {}
-
-
-# s3
-
-variable "s3_bucket" {}
+variable "tags" {}
 
 
 # VPC
@@ -64,5 +49,3 @@ variable "ec2_ami" {}
 variable "ec2_instance_type" {}
 
 variable "ec2_key_name" {}
-
-variable "tags" {}
