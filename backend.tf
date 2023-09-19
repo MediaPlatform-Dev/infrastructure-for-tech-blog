@@ -7,9 +7,10 @@ terraform {
   }
 
   backend s3 {
-    bucket  = "tech-blog-terraform-state"
-    key     = "terraform/terraform.tfstate"
-    region  = "ap-northeast-2"
-    encrypt = true
+    bucket         = "tech-blog-terraform-state"
+    key            = "terraform.tfstate"
+    region         = "ap-northeast-2"
+    encrypt        = true
+    dynamodb_table = "terraform-state-lock"
   }
 }
